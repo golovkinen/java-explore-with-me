@@ -1,5 +1,8 @@
 package ru.practicum.explore.event.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,26 +38,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class EventService implements IEventService {
 
-    private final IEventRepository iEventRepository;
-    private final IUserService iUserService;
-    private final IUserRepository iUserRepository;
-    private final ILocationService iLocationService;
-    private final ICategoryService iCategoryService;
-    private final IMarkRepository iMarkRepository;
-
-    private final EventClient eventClient;
-
-    public EventService(IEventRepository iEventRepository, IUserService iUserService, IUserRepository iUserRepository, ILocationService iLocationService, ICategoryService iCategoryService, IMarkRepository iMarkRepository, EventClient eventClient) {
-        this.iEventRepository = iEventRepository;
-        this.iUserService = iUserService;
-        this.iUserRepository = iUserRepository;
-        this.iLocationService = iLocationService;
-        this.iCategoryService = iCategoryService;
-        this.iMarkRepository = iMarkRepository;
-        this.eventClient = eventClient;
-    }
+    IEventRepository iEventRepository;
+    IUserService iUserService;
+    IUserRepository iUserRepository;
+    ILocationService iLocationService;
+    ICategoryService iCategoryService;
+    IMarkRepository iMarkRepository;
+    EventClient eventClient;
 
     @Override
     public List<EventFullDto> getAllAdmin(List<Integer> userIds, List<State> states, List<Integer> categories,
@@ -78,7 +72,7 @@ public class EventService implements IEventService {
         //нет параметров
         if (userIds.isEmpty() && states.isEmpty() && categories.isEmpty() &&
                 rangeFrom == null && rangeEnd == null) {
-            events = iEventRepository.findAll(pageable).getContent();
+            events = iEventRepository.findAllPaged(pageable).getContent();
         }
 
         //все мероприятия не позже даты
@@ -184,13 +178,13 @@ public class EventService implements IEventService {
         }
 
         //все мероприятия поиск по пользователю начиная с даты
-        if (!userIds.isEmpty() && !states.isEmpty() && categories.isEmpty() &&
+        if (!userIds.isEmpty() && states.isEmpty() && categories.isEmpty() &&
                 rangeFrom != null && rangeEnd == null) {
             events = iEventRepository.findAllByUserIdInAndEventDateAfter(userIds, EventMapper.toDateTime(rangeFrom), pageable).getContent();
         }
 
         //все мероприятия поиск по пользователю в промежутке
-        if (!userIds.isEmpty() && !states.isEmpty() && categories.isEmpty() &&
+        if (!userIds.isEmpty() && states.isEmpty() && categories.isEmpty() &&
                 rangeFrom != null && rangeEnd != null) {
             events = iEventRepository.findAllByUserIdInAndEventDateBetween(userIds, EventMapper.toDateTime(rangeFrom), EventMapper.toDateTime(rangeEnd), pageable).getContent();
         }
@@ -380,7 +374,6 @@ public class EventService implements IEventService {
 
         List<Event> events = new ArrayList<>();
 
-        //  List<State> stateEnums = states.stream().map(f -> State.valueOf(f)).collect(Collectors.toList());
 
         //нет параметров
         if ((text == null || text.isBlank()) && onlyAvailable && categories.isEmpty() && paid == null &&
@@ -753,11 +746,17 @@ public class EventService implements IEventService {
         }
 
         if (sort != null && sort.equals("EVENT_DATE") && events.size() > 1) {
-            events.sort(Comparator.comparing(Event::getEventDate));
+
+            events = events.stream()
+                    .sorted(Comparator.comparing(Event::getEventDate))
+                    .collect(Collectors.toList());
         }
 
         if (sort != null && sort.equals("VIEWS") && events.size() > 1) {
-            events.sort(Comparator.comparing(Event::getViews));
+
+            events = events.stream()
+                    .sorted(Comparator.comparing(Event::getViews).reversed())
+                    .collect(Collectors.toList());
         }
 
         eventClient.sendStat(EventMapper.toHitDto("events", request.getRequestURI(), request.getRemoteAddr(), timestamp));
@@ -1016,7 +1015,13 @@ public class EventService implements IEventService {
 
         List<Integer> subscriptionList = iUserService.getUserSubscriptions(userId);
 
-        return iEventRepository.findAllByUserIdInOrderByEventDateAsc(subscriptionList, pageable).stream()
+        if (ids.isEmpty()) {
+            return iEventRepository.findAllByUserIdInOrderByEventDateAsc(subscriptionList, pageable).stream()
+                    .map(EventMapper::toEventFullDto).collect(Collectors.toList());
+        }
+
+        List<Integer> checkedIds = subscriptionList.stream().filter(ids::contains).collect(Collectors.toList());
+        return iEventRepository.findAllByUserIdInOrderByEventDateAsc(checkedIds, pageable).stream()
                 .map(EventMapper::toEventFullDto).collect(Collectors.toList());
 
     }

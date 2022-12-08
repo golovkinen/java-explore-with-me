@@ -19,7 +19,4 @@ public class SubscriptionKey implements Serializable {
 
     @Column(name = "subscriber_id")
     Integer subscriberId;
-
-    // standard constructors, getters, and setters
-    // hashcode and equals implementation
 }

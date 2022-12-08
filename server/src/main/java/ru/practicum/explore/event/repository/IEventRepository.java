@@ -18,6 +18,9 @@ public interface IEventRepository extends JpaRepository<Event, Integer> {
 
     List<Event> findAllByUserIdOrderByEventDateDesc(int userId);
 
+    @Query("select e from Event e")
+    Page<Event> findAllPaged(Pageable pageable);
+
     Page<Event> findAllByEventDateBefore(LocalDateTime eventDate, Pageable pageable);
 
     Page<Event> findAllByEventDateAfter(LocalDateTime eventDate, Pageable pageable);
@@ -211,6 +214,7 @@ public interface IEventRepository extends JpaRepository<Event, Integer> {
 
     Page<Event> findAllByStateIsAndCategoryIdInAndPaidIsAndEventDateBetweenAndAnnotationContainingIgnoreCaseOrDescriptionContainingIgnoreCase(State state, Collection<Integer> categoryId, Boolean paid, LocalDateTime eventDate, LocalDateTime eventDate2, String text1, String text2, Pageable pageable);
 
+
     Page<Event> findAllByLocationIdIn(Collection<Integer> locationIds, Pageable pageable);
 
 
@@ -222,6 +226,5 @@ public interface IEventRepository extends JpaRepository<Event, Integer> {
 
     Page<Event> findAllByUserIdInOrderByEventDateAsc(Collection<Integer> ids, Pageable pageable);
 
-    Page<Event> findAllByLocationIdInOrderByEventDateAsc(Collection<Integer> ids, Pageable pageable);
 
 }

@@ -1,9 +1,7 @@
 package ru.practicum.explore.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,16 +12,17 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    private Integer id;
+    Integer id;
     @NotNull
     @NotBlank
     @Email(message = "Please enter a valid e-mail address")
-    private String email;
+    String email;
     @NotNull
     @NotBlank
     @Size(max = 200)
-    private String name;
-    private Boolean allowSubscription;
+    String name;
+    Boolean allowSubscription;
 }

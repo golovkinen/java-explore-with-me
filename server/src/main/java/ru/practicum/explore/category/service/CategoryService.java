@@ -1,5 +1,8 @@
 package ru.practicum.explore.category.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,17 +22,20 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class CategoryService implements ICategoryService {
 
-    private final ICategoryRepository iCategoryRepository;
-
-    public CategoryService(ICategoryRepository iCategoryRepository) {
-        this.iCategoryRepository = iCategoryRepository;
-    }
+    ICategoryRepository iCategoryRepository;
 
     @Override
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
-        return CategoryMapper.toCategoryDto(iCategoryRepository.save(CategoryMapper.toCategory(newCategoryDto)));
+
+        Category savedCategory = iCategoryRepository.save(CategoryMapper.toCategory(newCategoryDto));
+
+        log.info("Category create: {}", savedCategory);
+
+        return CategoryMapper.toCategoryDto(savedCategory);
     }
 
     @Override
@@ -44,6 +50,8 @@ public class CategoryService implements ICategoryService {
         } else {
             categoriesList = iCategoryRepository.findAll(pageable).getContent();
         }
+
+        log.info("Category getAll: {}", categoriesList);
 
         return categoriesList.stream().map(CategoryMapper::toCategoryDto)
                 .collect(Collectors.toList());
@@ -63,8 +71,6 @@ public class CategoryService implements ICategoryService {
 
         if (categoryDto.getName() != null) {
 
-            Optional<Category> tempCategory = iCategoryRepository.findByName(categoryDto.getName());
-
             if (iCategoryRepository.findByName(categoryDto.getName()).isPresent()) {
                 log.error("ConflictException: {}", "Категория : " + categoryDto.getName() + " уже существует");
                 throw new ConflictException("Категория : " + categoryDto.getName() + " уже существует");
@@ -73,7 +79,11 @@ public class CategoryService implements ICategoryService {
             categoryToUpdate.get().setName(categoryDto.getName());
         }
 
-        return CategoryMapper.toCategoryDto(iCategoryRepository.save(categoryToUpdate.get()));
+        Category savedCategory = iCategoryRepository.save(categoryToUpdate.get());
+
+        log.info("Category update: {}", savedCategory);
+
+        return CategoryMapper.toCategoryDto(savedCategory);
     }
 
     @Override

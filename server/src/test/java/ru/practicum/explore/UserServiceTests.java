@@ -1,7 +1,32 @@
 package ru.practicum.explore;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import ru.practicum.explore.user.dto.UserDto;
+import ru.practicum.explore.user.dto.UserShortDto;
+import ru.practicum.explore.user.model.Subscription;
+import ru.practicum.explore.user.model.SubscriptionKey;
+import ru.practicum.explore.user.model.User;
+import ru.practicum.explore.user.repository.ISubscriptionRepository;
+import ru.practicum.explore.user.repository.IUserRepository;
+import ru.practicum.explore.user.service.UserService;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class UserServiceTests {
-/*
+
 
     IUserRepository iUserRepository;
 
@@ -22,10 +47,32 @@ public class UserServiceTests {
 
         User user1 = new User(1, "email1@mail.com", "Name1", true, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
 
-        when(iUserRepository.findAll())
-                .thenReturn(Collections.singletonList(user1));
+        Page<User> pageUser = new PageImpl<>(Collections.singletonList(user1));
+
+
+        when(iUserRepository.findByIdIn(anyList(), any()))
+                .thenReturn(pageUser);
 
         final List<UserDto> list = userService.getAll(Collections.singletonList(1), 0, 10);
+
+        assertNotNull(list);
+        assertEquals(1, list.get(0).getId());
+        assertEquals(1, list.size());
+
+    }
+
+    @Test
+    void readAllNoParams() {
+
+        User user1 = new User(1, "email1@mail.com", "Name1", true, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
+
+        Page<User> pageUser = new PageImpl<>(Collections.singletonList(user1));
+
+
+        when(iUserRepository.findAllUsersPageable(any()))
+                .thenReturn(Collections.singletonList(user1));
+
+        final List<UserDto> list = userService.getAll(Collections.emptyList(), 0, 10);
 
         assertNotNull(list);
         assertEquals(1, list.get(0).getId());
@@ -48,7 +95,6 @@ public class UserServiceTests {
         assertEquals(1, newUser.getId());
 
     }
-
 
 
     @Test
@@ -86,7 +132,7 @@ public class UserServiceTests {
                 .thenReturn(user1);
 
 
-        final UserDto updateUser = userService.allowSubscription( 1, true);
+        final UserDto updateUser = userService.allowSubscription(1, true);
 
         assertNotNull(updateUser);
         assertEquals(1, updateUser.getId());
@@ -101,7 +147,6 @@ public class UserServiceTests {
         User user1 = new User(1, "email1@mail.com", "Name1", true, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
 
 
-
         when(iUserRepository.findById(anyInt()))
                 .thenReturn(Optional.of(user1));
 
@@ -113,9 +158,9 @@ public class UserServiceTests {
                 .thenReturn(subscription);
 
 
-        final HttpStatus httpStatus = userService.subscribeToUser( 1, 2);
+        final HttpStatus httpStatus = userService.subscribeToUser(1, 2);
 
-        assertEquals("OK", HttpStatus.OK);
+        assertEquals("200 OK", HttpStatus.OK.toString());
 
     }
 
@@ -139,9 +184,9 @@ public class UserServiceTests {
                 .thenReturn(subscription);
 
 
-        final HttpStatus httpStatus = userService.unsubscribeFromUser( 1, 2);
+        final HttpStatus httpStatus = userService.unsubscribeFromUser(1, 2);
 
-        assertEquals("OK", HttpStatus.OK);
+        assertEquals("200 OK", HttpStatus.OK.toString());
 
     }
 
@@ -159,7 +204,7 @@ public class UserServiceTests {
                 .thenReturn(Collections.singletonList(subscription));
 
 
-        final List<Integer> ids = userService.getUserSubscriptions( 1);
+        final List<Integer> ids = userService.getUserSubscriptions(1);
 
         assertNotNull(ids);
         assertEquals(1, ids.get(0));
@@ -175,7 +220,7 @@ public class UserServiceTests {
 
         Subscription subscription = new Subscription(new SubscriptionKey(1, 2), null);
 
-        Page pageUser = new PageImpl<User>(Collections.singletonList(user1), PageRequest.of(1, 10), 1);
+        Page<User> pageUser = new PageImpl<>(Collections.singletonList(user1));
 
         when(iUserRepository.findById(anyInt()))
                 .thenReturn(Optional.of(user1));
@@ -186,10 +231,10 @@ public class UserServiceTests {
         when(iUserRepository.findByIdIn(anyList(), any()))
                 .thenReturn(pageUser);
 
-        final List<UserShortDto> userShortDtos = userService.getAllUserSubscriptions( 1, 0, 10);
+        final List<UserShortDto> userShortDtos = userService.getAllUserSubscriptions(1, 0, 10);
 
         assertNotNull(userShortDtos);
-        assertEquals(1, userShortDtos.get(0));
+        assertEquals(1, userShortDtos.get(0).getId());
 
     }
 
@@ -202,6 +247,8 @@ public class UserServiceTests {
 
         Subscription subscription = new Subscription(new SubscriptionKey(1, 2), null);
 
+        Page<User> page = new PageImpl<>(Collections.singletonList(user1));
+
         when(iUserRepository.findById(anyInt()))
                 .thenReturn(Optional.of(user1));
 
@@ -209,16 +256,14 @@ public class UserServiceTests {
                 .thenReturn(Collections.singletonList(subscription));
 
         when(iUserRepository.findByIdIn(anyList(), any()))
-                .thenReturn((Page<User>) Collections.singletonList(user1));
+                .thenReturn(page);
 
-        final List<UserShortDto> userShortDtos = userService.getAllUserSubscriptions( 1, 0, 10);
+        final List<UserShortDto> userShortDtos = userService.getAllUserSubscriptions(1, 0, 10);
 
         assertNotNull(userShortDtos);
-        assertEquals(1, userShortDtos.get(0));
+        assertEquals(1, userShortDtos.get(0).getId());
 
     }
-
- */
 
 
 }

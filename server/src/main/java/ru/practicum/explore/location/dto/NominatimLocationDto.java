@@ -1,10 +1,8 @@
 package ru.practicum.explore.location.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 
@@ -12,23 +10,25 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NominatimLocationDto implements Serializable {
 
-    private String displayName;
-    private Address address;
+    String displayName;
+    Address address;
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @Setter
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Address implements Serializable {
-        private String houseNumber;
-        private String road;
-        private String city;
-        private String suburb;
-        private String region;
-        private String country;
+        String houseNumber;
+        String road;
+        String city;
+        String suburb;
+        String region;
+        String country;
     }
 }

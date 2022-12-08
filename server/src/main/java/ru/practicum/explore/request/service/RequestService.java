@@ -1,5 +1,8 @@
 package ru.practicum.explore.request.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,17 +26,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class RequestService implements IRequestService {
 
-    private final IUserService iUserService;
-    private final IEventService iEventService;
-    private final IRequestRepository iRequestRepository;
-
-    public RequestService(IUserService iUserService, IEventService iEventService, IRequestRepository iRequestRepository) {
-        this.iUserService = iUserService;
-        this.iEventService = iEventService;
-        this.iRequestRepository = iRequestRepository;
-    }
+    IUserService iUserService;
+    IEventService iEventService;
+    IRequestRepository iRequestRepository;
 
     @Override
     public RequestInfoDto createRequest(int userId, int eventId) {

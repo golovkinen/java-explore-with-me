@@ -20,6 +20,8 @@ import java.util.HashSet;
 public class EventMapper {
 
 
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static Event toEvent(NewEventDto newEventDto, User user, Category category, Location location) {
         return new Event(null, newEventDto.getAnnotation(), newEventDto.getDescription(), newEventDto.getTitle(),
                 toDateTime(newEventDto.getEventDate()), newEventDto.getPaid(), true, null, null,
@@ -47,8 +49,6 @@ public class EventMapper {
 
         return new HitDto(api, uri, ip, dateTimeToString(localDateTime));
     }
-
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static LocalDateTime toDateTime(String time) {
         return LocalDateTime.parse(time, formatter);

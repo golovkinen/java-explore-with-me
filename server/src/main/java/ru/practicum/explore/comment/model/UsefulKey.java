@@ -20,6 +20,4 @@ public class UsefulKey implements Serializable {
     @Column(name = "comment_id")
     Integer commentId;
 
-    // standard constructors, getters, and setters
-    // hashcode and equals implementation
 }

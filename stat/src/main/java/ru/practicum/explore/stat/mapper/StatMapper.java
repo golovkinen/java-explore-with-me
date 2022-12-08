@@ -10,9 +10,6 @@ import java.time.format.DateTimeFormatter;
 
 public class StatMapper {
 
-    //   static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-
-    // Custom format if needed
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Stat toStat(HitDto hitDto) {

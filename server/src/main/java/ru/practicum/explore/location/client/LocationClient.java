@@ -9,8 +9,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.explore.client.BaseClient;
 import ru.practicum.explore.location.dto.NominatimLocationDto;
 
-import java.util.Map;
-
 @Service
 
 public class LocationClient extends BaseClient {
@@ -26,10 +24,7 @@ public class LocationClient extends BaseClient {
     }
 
     public NominatimLocationDto getLocationDetails(double lat, double lon) {
-        Map<String, Object> parameters = Map.of(
-                "lat", lat,
-                "lon", lon
-        );
-        return getLoc("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon, parameters);
+
+        return getLoc("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon);
     }
 }

@@ -20,6 +20,4 @@ public class MarkKey implements Serializable {
     @Column(name = "event_id")
     Integer eventId;
 
-    // standard constructors, getters, and setters
-    // hashcode and equals implementation
 }

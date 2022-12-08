@@ -1,25 +1,24 @@
 package ru.practicum.explore.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventDto {
 
-    private String annotation;
-    private String title;
-    private String description;
-    private String eventDate;
-    private Integer category;
-    private Boolean paid;
-    private Integer participantLimit;
-    private Integer eventId;
+    String annotation;
+    String title;
+    String description;
+    String eventDate;
+    Integer category;
+    Boolean paid;
+    Integer participantLimit;
+    Integer eventId;
 
 }
 

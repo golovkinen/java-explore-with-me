@@ -1,5 +1,8 @@
 package ru.practicum.explore.compilation.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,9 +13,7 @@ import ru.practicum.explore.compilation.dto.NewCompilationDto;
 import ru.practicum.explore.compilation.mapper.CompilationMapper;
 import ru.practicum.explore.compilation.model.Compilation;
 import ru.practicum.explore.compilation.repository.ICompilationRepository;
-import ru.practicum.explore.event.dto.EventShortDto;
 import ru.practicum.explore.event.enums.State;
-import ru.practicum.explore.event.mapper.EventMapper;
 import ru.practicum.explore.event.model.Event;
 import ru.practicum.explore.event.service.IEventService;
 import ru.practicum.explore.exceptionhandler.BadRequestException;
@@ -25,15 +26,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class CompilationService implements ICompilationService {
 
-    private final ICompilationRepository iCompilationRepository;
-    private final IEventService iEventService;
-
-    public CompilationService(ICompilationRepository iCompilationRepository, IEventService iEventService) {
-        this.iCompilationRepository = iCompilationRepository;
-        this.iEventService = iEventService;
-    }
+    ICompilationRepository iCompilationRepository;
+    IEventService iEventService;
 
     @Override
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
@@ -53,6 +51,8 @@ public class CompilationService implements ICompilationService {
         newCompilation.getEvents().addAll(events);
 
         Compilation savedCompilation = iCompilationRepository.save(newCompilation);
+
+        log.info("Compilation create: {}", savedCompilation);
 
         events.stream().forEach(e -> e.setCompilation(savedCompilation));
 
@@ -83,8 +83,6 @@ public class CompilationService implements ICompilationService {
             log.error("NotFoundException: {}", "Компиляция с ИД " + compId + " не найдена");
             throw new NotFoundException("Компиляция с ИД " + compId + " не найдена");
         }
-
-        List<EventShortDto> eventShortDtoList = compilation.get().getEvents().stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
 
         return CompilationMapper.toCompilationDto(compilation.get());
     }
@@ -117,8 +115,10 @@ public class CompilationService implements ICompilationService {
 
         compilation.get().getEvents().add(eventToAdd.get());
         Compilation savedCompilation = iCompilationRepository.save(compilation.get());
+        log.info("Compilation AddEventToCompilation: {}", savedCompilation);
         eventToAdd.get().setCompilation(savedCompilation);
         Event savedEvent = iEventService.saveEvent(eventToAdd.get());
+        log.info("Compilation AddEventToCompilation: {}", savedEvent);
 
         return HttpStatus.OK;
     }

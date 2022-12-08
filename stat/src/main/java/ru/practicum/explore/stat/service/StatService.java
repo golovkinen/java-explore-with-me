@@ -1,5 +1,8 @@
 package ru.practicum.explore.stat.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,14 +21,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class StatService implements IStatService {
 
-    private final IStatRepository iStatRepository;
-
-
-    public StatService(IStatRepository iStatRepository) {
-        this.iStatRepository = iStatRepository;
-    }
+    IStatRepository iStatRepository;
 
     @Override
     public HttpStatus create(HitDto hitDto) {
@@ -66,12 +66,8 @@ public class StatService implements IStatService {
 
         if (unique) {
 
-            Integer countDist = iStatRepository.getUriStatDistinct(urisList.get(0), startT, endT);
-
             return urisList.stream().map(u -> StatMapper.toViewStatDto(iStatRepository.getAppName(u), u, iStatRepository.getUriStatDistinct(u, startT, endT))).collect(Collectors.toList());
         }
-
-        Integer countDist = iStatRepository.getUriStatAll(urisList.get(0), startT, endT);
 
         return urisList.stream().map(u -> StatMapper.toViewStatDto(iStatRepository.getAppName(u), u, iStatRepository.getUriStatAll(u, startT, endT))).collect(Collectors.toList());
 

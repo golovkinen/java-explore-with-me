@@ -1,5 +1,8 @@
 package ru.practicum.explore.comment.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,20 +37,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class CommentService implements ICommentService {
-    private final ICommentRepository iCommentRepository;
-    private final IUserService iUserService;
-
-    private final IEventService iEventService;
-
-    private final IUsefulnessRepository iUsefulnessRepository;
-
-    public CommentService(ICommentRepository iCommentRepository, IUserService iUserService, IEventService iEventService, IUsefulnessRepository iUsefulnessRepository) {
-        this.iCommentRepository = iCommentRepository;
-        this.iUserService = iUserService;
-        this.iEventService = iEventService;
-        this.iUsefulnessRepository = iUsefulnessRepository;
-    }
+    ICommentRepository iCommentRepository;
+    IUserService iUserService;
+    IEventService iEventService;
+    IUsefulnessRepository iUsefulnessRepository;
 
     @Override
     public List<CommentFullDto> getAllCommentsAdmin(List<Integer> ids, List<Integer> events, List<CommentState> commentStates,
@@ -165,6 +161,8 @@ public class CommentService implements ICommentService {
             commentList = iCommentRepository.findAllByEventIdInAndStateInAndCreatedBetween(events, commentStates, rangeFrom.get(), rangeEnd.get(), pageable).getContent();
         }
 
+        log.info("Comments getAllAdmin: {}", commentList);
+
         return commentList.stream()
                 .map(CommentMapper::toCommentFullDto)
                 .collect(Collectors.toList());
@@ -180,6 +178,8 @@ public class CommentService implements ICommentService {
 
         //возвращать пустой список если оба параметра не указаны
         if (eventIds.isEmpty() && text.isEmpty()) {
+
+            log.info("Comments getAllPublic: {}", "возвращать пустой список если оба параметра не указаны");
             return Collections.emptyList();
         }
 
@@ -330,6 +330,8 @@ public class CommentService implements ICommentService {
             commentList = commentsSearch.stream().filter(f -> isUseful(f.getId())).collect(Collectors.toList());
         }
 
+        log.info("Comments getAllPublic: {}", commentList);
+
         return commentList.stream().map(CommentMapper::toCommentInfoDto).collect(Collectors.toList());
     }
 
@@ -348,6 +350,7 @@ public class CommentService implements ICommentService {
         }
 
         Pageable pageable = PageRequest.of(from / size, size);
+
         return iCommentRepository.findAllByUserIdAndAndStateIsNot(userId, CommentState.DELETED, pageable).stream()
                 .map(CommentMapper::toCommentFullDto).collect(Collectors.toList());
     }
@@ -372,6 +375,8 @@ public class CommentService implements ICommentService {
         }
 
         Comment newComment = iCommentRepository.save(CommentMapper.toComment(newCommentDto, author.get(), event.get()));
+
+        log.info("Comments Create: {}", newComment);
 
         event.get().getComments().add(newComment);
 

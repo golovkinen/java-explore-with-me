@@ -1,9 +1,7 @@
 package ru.practicum.explore.comment.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.explore.comment.enums.CommentState;
 import ru.practicum.explore.user.dto.UserShortDto;
 
@@ -13,11 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentModerateDto {
 
-    private Integer id;
-    private String text;
-    private UserShortDto author;
-    private LocalDateTime created;
-    private CommentState state;
+    Integer id;
+    String text;
+    UserShortDto author;
+    LocalDateTime created;
+    CommentState state;
 }

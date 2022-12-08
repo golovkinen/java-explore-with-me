@@ -1,17 +1,16 @@
 package ru.practicum.explore.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventInfoDto {
 
-    private Integer id;
-    private String title;
+    Integer id;
+    String title;
 
 }

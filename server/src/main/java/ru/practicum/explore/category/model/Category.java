@@ -1,9 +1,7 @@
 package ru.practicum.explore.category.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.explore.event.model.Event;
 
 import javax.persistence.*;
@@ -15,15 +13,16 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "categories")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id", nullable = false)
-    private Integer id;
+    Integer id;
 
     @Column(name = "category_name", nullable = false)
-    private String name;
+    String name;
 
     @OneToMany(mappedBy = "category")
-    private Set<Event> events;
+    Set<Event> events;
 }

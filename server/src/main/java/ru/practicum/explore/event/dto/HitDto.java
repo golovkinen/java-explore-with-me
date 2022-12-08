@@ -1,21 +1,20 @@
 package ru.practicum.explore.event.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class HitDto {
 
-    private String app;
+    String app;
 
-    private String uri;
+    String uri;
 
-    private String ip;
+    String ip;
 
-    private String timestamp;
+    String timestamp;
 }

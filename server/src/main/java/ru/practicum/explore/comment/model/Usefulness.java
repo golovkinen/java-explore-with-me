@@ -20,18 +20,6 @@ public class Usefulness {
 
     @EmbeddedId
     UsefulKey id;
-/*
-    @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @ManyToOne
-    @MapsId("commentId")
-    @JoinColumn(name = "comment_id")
-    Comment comment;
-
- */
 
     @Column(name = "useful")
     Boolean useful;

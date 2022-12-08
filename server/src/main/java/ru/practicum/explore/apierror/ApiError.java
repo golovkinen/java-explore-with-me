@@ -1,9 +1,7 @@
 package ru.practicum.explore.apierror;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 
@@ -11,11 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApiError {
-    private List<String> errors;
-    private String message;
-    private String reason;
-    private String status;
-    private String timestamp;
+    List<String> errors;
+    String message;
+    String reason;
+    String status;
+    String timestamp;
 
 }

@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class RequestMapper {
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static Request createRequest(User requester, Event event) {
         return new Request(null, null, Status.PENDING,
                 event, requester);
@@ -20,8 +22,6 @@ public class RequestMapper {
         return new RequestInfoDto(request.getId(), dateTimeToString(request.getCreatedOn()), request.getStatus().toString(),
                 request.getEvent().getId(), request.getUser().getId());
     }
-
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static LocalDateTime toDateTime(String time) {
         return LocalDateTime.parse(time, formatter);

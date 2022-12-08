@@ -1,9 +1,7 @@
 package ru.practicum.explore.location.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.locationtech.jts.geom.Point;
 import ru.practicum.explore.event.model.Event;
 
@@ -14,43 +12,44 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "locations")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id", nullable = false)
-    private Integer id;
+    Integer id;
 
     @Column(name = "location_title")
-    private String title;
+    String title;
 
     @Column(columnDefinition = "geometry(Point,4326)", name = "position", nullable = false)
-    private Point position;
+    Point position;
 
     @Column(name = "location_lan", nullable = false)
-    private Double lat;
+    Double lat;
 
     @Column(name = "location_lon", nullable = false)
-    private Double lon;
+    Double lon;
 
     @Column(name = "country")
-    private String country;
+    String country;
 
     @Column(name = "city")
-    private String city;
+    String city;
 
     @Column(name = "suburb")
-    private String suburb;
+    String suburb;
 
     @Column(name = "road")
-    private String road;
+    String road;
 
     @Column(name = "house_number")
-    private String houseNumber;
+    String houseNumber;
 
     @Column(name = "display_name")
-    private String displayName;
+    String displayName;
 
     @OneToOne(mappedBy = "location")
-    private Event event;
+    Event event;
 }

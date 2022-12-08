@@ -1,9 +1,7 @@
 package ru.practicum.explore.compilation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.explore.event.model.Event;
 
@@ -17,23 +15,24 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "compilations")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id", nullable = false)
-    private Integer id;
+    Integer id;
 
     @Column(name = "compilation_title", nullable = false)
-    private String title;
+    String title;
 
     @Column(name = "compilation_created_on", nullable = false)
     @CreationTimestamp
-    private LocalDateTime createdOn;
+    LocalDateTime createdOn;
 
     @Column(name = "compilation_pinned", nullable = false)
-    private Boolean pinned;
+    Boolean pinned;
 
     @OneToMany(mappedBy = "compilation")
-    private Set<Event> events;
+    Set<Event> events;
 
 }

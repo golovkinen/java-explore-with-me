@@ -1,9 +1,7 @@
 package ru.practicum.explore.location.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
 
@@ -11,22 +9,23 @@ import javax.validation.constraints.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewLocationDto {
 
     @NotNull
     @NotBlank
     @Size(max = 200)
-    private String title;
+    String title;
 
     @NotNull
     @NotBlank
     @Min(value = -90)
     @Max(value = 90)
-    private Double lat;
+    Double lat;
 
     @Min(value = -180)
     @Max(value = 180)
     @NotNull
     @NotBlank
-    private Double lon;
+    Double lon;
 }

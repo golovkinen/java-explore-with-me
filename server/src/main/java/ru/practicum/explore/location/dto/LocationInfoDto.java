@@ -1,19 +1,18 @@
 package ru.practicum.explore.location.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class LocationInfoDto {
 
-    private Integer id;
-    private String title;
-    private Double lat;
-    private Double lon;
-    private String address;
+    Integer id;
+    String title;
+    Double lat;
+    Double lon;
+    String address;
 }

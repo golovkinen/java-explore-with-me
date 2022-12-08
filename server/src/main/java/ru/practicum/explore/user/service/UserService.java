@@ -1,5 +1,8 @@
 package ru.practicum.explore.user.service;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,16 +28,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class UserService implements IUserService {
 
-    private final IUserRepository iUserRepository;
+    IUserRepository iUserRepository;
+    ISubscriptionRepository iSubscriptionRepository;
 
-    private final ISubscriptionRepository iSubscriptionRepository;
-
-    public UserService(IUserRepository iUserRepository, ISubscriptionRepository iSubscriptionRepository) {
-        this.iUserRepository = iUserRepository;
-        this.iSubscriptionRepository = iSubscriptionRepository;
-    }
 
     @Override
     public UserDto create(UserDto userDto) {
@@ -54,7 +54,7 @@ public class UserService implements IUserService {
             usersList = iUserRepository.findByIdIn(ids, pageable).getContent();
         } else {
 
-            usersList = iUserRepository.findAll(pageable).getContent();
+            usersList = iUserRepository.findAllUsersPageable(pageable);
         }
 
         if (usersList.isEmpty()) {

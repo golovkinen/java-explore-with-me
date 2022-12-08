@@ -1,23 +1,23 @@
 package ru.practicum.explore.request.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+
 public class RequestInfoDto {
 
-    private Integer id;
+     Integer id;
 
-    private String created;
+     String created;
 
-    private String status;
+     String status;
 
-    private Integer event;
+     Integer event;
 
-    private Integer requester;
+     Integer requester;
 }

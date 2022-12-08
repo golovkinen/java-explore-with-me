@@ -1,6 +1,5 @@
 package ru.practicum.explore.location.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.util.GeometricShapeFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +29,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+
 public class LocationService implements ILocationService {
 
-    GeometryFactory geometryFactory = new GeometryFactory();
     private final ILocationRepository iLocationRepository;
     private final LocationClient locationClient;
+    GeometryFactory geometryFactory = new GeometryFactory();
 
-    public LocationService(ILocationRepository iLocationRepository, LocationClient locationClient, ObjectMapper objectMapper) {
+    public LocationService(ILocationRepository iLocationRepository, LocationClient locationClient) {
         this.iLocationRepository = iLocationRepository;
         this.locationClient = locationClient;
     }

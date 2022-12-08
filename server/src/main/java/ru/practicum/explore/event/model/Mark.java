@@ -21,20 +21,6 @@ public class Mark {
     @EmbeddedId
     MarkKey id;
 
-   /*
-
-    @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @ManyToOne
-    @MapsId("eventId")
-    @JoinColumn(name = "event_id")
-    Event event;
-
-    */
-
     @Column(name = "mark")
     Integer mark;
 
